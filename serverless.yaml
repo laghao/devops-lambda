@@ -3,35 +3,35 @@ custom:
   secrets:
     dev: 
       db_creds: ${ssm:/aws/reference/secretsmanager/${env:ENV}/db-creds~true}
-      #db_user: ${ssm:/${env:ENV}/db-user}
-      #db_host: ${ssm:/${env:ENV}/db-host}
+      db_user: ${ssm:/${env:ENV}/db-user}
+      db_host: ${ssm:/${env:ENV}/db-host}
       #db_password: ${ssm:/${env:ENV}/db-password}
       db_port: 3306
-      #account_id: ${ssm:/${env:ENV}/account-id}
-      #region: ${ssm:/${env:ENV}/region}
+      account_id: ${ssm:/${env:ENV}/account-id}
+      region: ${ssm:/${env:ENV}/region}
     #local: ${file(local_secrets.json)}
 provider:
   name: aws
   runtime: python3.7
   deploymentBucket:
-    name: ${ssm:/${env:ENV}/lambda-bucket}
+    name: ${ssm:/${env:ENV}/lambda-s3-bucket}
   role: ${ssm:/${env:ENV}/lambda-role-arn}
   stage:  ${opt:stage,'dev'}
-  region: us-east-1
+  region: ${self:custom.secrets.region}
   vpc:
     securityGroupIds:
       - ${ssm:/${env:ENV}/lambda-sg}
     subnetIds:
-      - ${ssm:/${env:ENV}/private-subnet-1}
-      - ${ssm:/${env:ENV}/private-subnet-2}
+      - ${ssm:/${env:ENV}/private_subnet-1}
+      - ${ssm:/${env:ENV}/private_subnet-2}
   environment:
-    #DB_NAME: ${self:custom.secrets.${self:provider.stage}.db_name}
+    DB_NAME: ${self:custom.secrets.${self:provider.stage}.db_name}
     DB_USER: ${self:custom.secrets.${self:provider.stage}.db_creds.username}
     DB_PASSWORD: ${self:custom.secrets.${self:provider.stage}.db_creds.password}
-    #DB_HOST: ${self:custom.secrets.${self:provider.stage}.db_host}
+    DB_HOST: ${self:custom.secrets.${self:provider.stage}.db_host}
     DB_PORT: ${self:custom.secrets.${self:provider.stage}.db_port}
-    #ACCOUNT_ID: ${self:custom.secrets.${self:provider.stage}.account_id}
-    #REGION: ${self:custom.secrets.${self:provider.stage}.region}
+    ACCOUNT_ID: ${self:custom.secrets.${self:provider.stage}.account_id}
+    REGION: ${self:custom.secrets.${self:provider.stage}.region}
     SERVICE_NAME: ${self:service}
     STAGE: ${self:provider.stage}
 
