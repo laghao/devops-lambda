@@ -5,6 +5,7 @@ custom:
       db_creds: ${ssm:/aws/reference/secretsmanager/devrds-secret~true}
       db_user: ${ssm:/${env:ENV}/db-user}
       db_host: ${ssm:/${env:ENV}/db-host}
+      db_name: ${ssm:/${env:ENV}/db-name}
       #db_password: ${ssm:/${env:ENV}/db-password}
       db_port: 3306
       account_id: ${ssm:/${env:ENV}/account-id}
